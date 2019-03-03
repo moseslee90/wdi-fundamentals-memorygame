@@ -2,32 +2,35 @@ console.log("Up and running!");
 var cards = [];
 var cardsInPlay = [];
 var score = 0;
+var totalScore = 0;
 var tries = 0;
 var random1to4 = function() {
 	return Math.floor(Math.random() * 4);
 }
-var createCard = function (rank, suit, cardImage) {
+var createCard = function (rank, suit, cardImage, flipped, matched) {
 	var card = {
 		rank: rank,
 		suit: suit,
-		cardImage: cardImage
+		cardImage: cardImage,
+		flipped: flipped,
+		matched: matched
 	}
 	cards.push(card);
 }
-createCard("queen", "hearts", "images/queen-of-hearts.png");
-createCard("queen", "diamonds", "images/queen-of-diamonds.png");
-createCard("king", "diamonds", "images/king-of-hearts.png");
-createCard("king", "diamonds", "images/king-of-diamonds.png");
+createCard("queen", "hearts", "images/queen-of-hearts.png", false, false);
+createCard("queen", "diamonds", "images/queen-of-diamonds.png", false, false);
+createCard("king", "diamonds", "images/king-of-hearts.png", false, false);
+createCard("king", "diamonds", "images/king-of-diamonds.png", false, false);
 var flipCard = function (){
 	var cardId = this.getAttribute('data-id');
+	cards[cardId].flipped = true;
 	console.log("User flipped " + cards[cardId].rank + " of " + cards[cardId].suit);
 	console.log(cards[cardId].cardImage);
-	cardsInPlay.push(cards[cardId].rank);
+	cardsInPlay.push(cardId);
 	this.setAttribute('src', cards[cardId].cardImage);
 	if (cardsInPlay.length === 2) {
 		console.log("2 Cards are in Play");
 		checkForMatch();
-		refreshBoard();
 		cardsInPlay = [];
 	}
 }
@@ -73,13 +76,39 @@ var refreshBoard = function () {
 		cardElement.addEventListener('click', flipCard);
 	}
 }
-var checkForMatch = function () {
-	tries++;
-	if (cardsInPlay[0] === cardsInPlay[1]) {
-		score++;
-		alert("You found a match!\n" + "Your score is " + score + "/" + tries);
-	} else {
-		alert("Sorry, try again.\n" + "Your score is " + score + "/" + tries);
+var turnCardsBackFaceDown = function() {
+	for (var i = 0; i < cards.length; i++) {
+		var cardElement = document.getElementsByTagName('img')[i];
+		cardElement.setAttribute('src', "images/back.png");
 	}
+}
+var checkForMatch = function () {
+	var matches = 0;
+	tries++;
+	score = 2/tries;
+	score = score.toFixed(2);
+	score = parseFloat(score);
+	if (cards[cardsInPlay[0]].rank === cards[cardsInPlay[1]].rank) {
+		cards[cardsInPlay[0]].matched = true;
+		cards[cardsInPlay[1]].matched = true;
+		for (var i = 0; i < cards.length; i++) {
+			if(cards[i].matched){
+				matches++;
+			}
+		}
+		if (matches == 4){
+			totalScore = totalScore + score;
+			tries = 0;
+			for (var i = 0; i < cards.length; i++) {
+				cards[i].matched = false;
+			}
+			alert("You found a match!\nAll cards matched, game reset!\nGained " + score + " points this game!\nTotal score is " + totalScore + ".");
+			return refreshBoard();
+		}
+		alert("You found a match!");
+	} else {
+		alert("Sorry, try again.");
+	}
+	turnCardsBackFaceDown();
 }
 createBoard();
