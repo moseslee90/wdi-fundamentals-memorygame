@@ -7,23 +7,21 @@ var tries = 0;
 var random1to4 = function() {
 	return Math.floor(Math.random() * 4);
 }
-var createCard = function (rank, suit, cardImage, flipped, matched) {
+var createCard = function (rank, suit, cardImage, matched) {
 	var card = {
 		rank: rank,
 		suit: suit,
 		cardImage: cardImage,
-		flipped: flipped,
 		matched: matched
 	}
 	cards.push(card);
 }
-createCard("queen", "hearts", "images/queen-of-hearts.png", false, false);
-createCard("queen", "diamonds", "images/queen-of-diamonds.png", false, false);
-createCard("king", "diamonds", "images/king-of-hearts.png", false, false);
-createCard("king", "diamonds", "images/king-of-diamonds.png", false, false);
+createCard("queen", "hearts", "images/queen-of-hearts.png", false);
+createCard("queen", "diamonds", "images/queen-of-diamonds.png", false);
+createCard("king", "diamonds", "images/king-of-hearts.png", false);
+createCard("king", "diamonds", "images/king-of-diamonds.png", false);
 var flipCard = function (){
 	var cardId = this.getAttribute('data-id');
-	cards[cardId].flipped = true;
 	console.log("User flipped " + cards[cardId].rank + " of " + cards[cardId].suit);
 	console.log(cards[cardId].cardImage);
 	cardsInPlay.push(cardId);
