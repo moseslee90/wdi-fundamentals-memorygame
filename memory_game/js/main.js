@@ -1,6 +1,8 @@
 console.log("Up and running!");
 var cards = [];
 var cardsInPlay = [];
+var score = 0;
+var tries = 0;
 var random1to4 = function() {
 	return Math.floor(Math.random() * 4);
 }
@@ -25,10 +27,11 @@ var flipCard = function (){
 	if (cardsInPlay.length === 2) {
 		console.log("2 Cards are in Play");
 		checkForMatch();
-		location.reload();
+		refreshBoard();
+		cardsInPlay = [];
 	}
 }
-var createBoard = function () {
+var generateRandomCardId = function () {
 	//randomising cardId
 	var cardId = [];
 	cardId.push(random1to4());
@@ -48,6 +51,10 @@ var createBoard = function () {
 	}
 	console.log("Random array with no conflict generated!");
 	console.log(cardId);
+	return cardId;
+}
+var createBoard = function () {
+	var cardId = generateRandomCardId();
 	for (var i = 0; i < cards.length; i++) {
 		var cardElement = document.createElement('img');
 		cardElement.setAttribute('src', "images/back.png");
@@ -56,11 +63,23 @@ var createBoard = function () {
 		document.getElementById('game-board').appendChild(cardElement);
 	}
 }
+var refreshBoard = function () {
+	var cardId = generateRandomCardId();
+	for (var i = 0; i < cards.length; i++) {
+		var cardElement = document.getElementsByTagName('img')[i];
+		cardElement.setAttribute('src', "images/back.png");
+		cardElement.setAttribute('data-id', cardId[i]);
+		cardElement.removeEventListener('click', flipCard);
+		cardElement.addEventListener('click', flipCard);
+	}
+}
 var checkForMatch = function () {
+	tries++;
 	if (cardsInPlay[0] === cardsInPlay[1]) {
-		alert("You found a match!");
+		score++;
+		alert("You found a match!\n" + "Your score is " + score + "/" + tries);
 	} else {
-		alert("Sorry, try again.");
+		alert("Sorry, try again.\n" + "Your score is " + score + "/" + tries);
 	}
 }
 createBoard();
