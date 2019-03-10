@@ -95,13 +95,16 @@ var refreshBoard = function () {
 var turnCardsBackFaceDown = function() {
 	for (var i = 0; i < cards.length; i++) {
 		var cardElement = document.getElementsByTagName('img')[i];
+        if (cards[cardElement.getAttribute('data-id')].matched !== true) {
 		cardElement.setAttribute('src', "images/back.png");
+        } else {
+        }
 	}
 }
 var checkForMatch = function () {
 	var matches = 0;
 	tries++;
-	score = 2/tries;
+	score = cards.length/tries;
 	score = score.toFixed(2);
 	score = parseFloat(score);
 	if (cards[cardsInPlay[0]].rank === cards[cardsInPlay[1]].rank) {
