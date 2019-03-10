@@ -101,12 +101,23 @@ var turnCardsBackFaceDown = function() {
         }
 	}
 }
+var updateScore = function () {
+    var scoreElement = document.getElementById('score');
+    var totalScoreElement = document.getElementById('total-score');
+    if (score <= 100) {
+        scoreElement.innerHTML = "Score: " + score;
+    } else {
+        scoreElement.innerHTML = "Score: " + 100;
+    }
+    totalScoreElement.innerHTML = "Total Score: " + totalScore;
+}
 var checkForMatch = function () {
 	var matches = 0;
 	tries++;
-	score = cards.length/tries;
+	score = cards.length/tries*100;
 	score = score.toFixed(2);
 	score = parseFloat(score);
+    updateScore();
 	if (cards[cardsInPlay[0]].rank === cards[cardsInPlay[1]].rank) {
 		cards[cardsInPlay[0]].matched = true;
 		cards[cardsInPlay[1]].matched = true;
@@ -122,7 +133,8 @@ var checkForMatch = function () {
 				cards[i].matched = false;
 			}
 			alert("You found a match!\nAll cards matched, game reset!\nGained " + score + " points this game!\nTotal score is " + totalScore + ".");
-			return refreshBoard();
+            updateScore();
+            return refreshBoard();
 		}
 		alert("You found a match!");
 	} else {
