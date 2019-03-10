@@ -1,6 +1,7 @@
 console.log("Up and running!");
 var cards = [];
 var cardsInPlay = [];
+var cardsFlipped = [];
 var score = 0;
 var totalScore = 0;
 var tries = 0;
@@ -37,8 +38,14 @@ var flipCard = function (){
 	console.log("User flipped " + cards[cardId].rank + " of " + cards[cardId].suit);
 	console.log(cards[cardId].cardImage);
 	cardsInPlay.push(cardId);
+    cardsFlipped.push(cardId);
+    if (cardsFlipped.length === 3) {
+        turnCardsBackFaceDown();
+        cardsFlipped.shift();
+        cardsFlipped.shift();
+    }
 	this.setAttribute('src', cards[cardId].cardImage);
-	if (cardsInPlay.length === 2) {
+    if (cardsInPlay.length === 2) {
 		console.log("2 Cards are in Play");
 		checkForMatch();
 		cardsInPlay = [];
@@ -136,10 +143,9 @@ var checkForMatch = function () {
             updateScore();
             return refreshBoard();
 		}
-		alert("You found a match!");
+		// alert("You found a match!");
 	} else {
-		alert("Sorry, try again.");
-        turnCardsBackFaceDown();
+		// alert("Sorry, try again.");
 	}
 	// turnCardsBackFaceDown();
 }
